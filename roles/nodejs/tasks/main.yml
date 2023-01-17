@@ -1,0 +1,8 @@
+---
+
+- name: Enable latest version of nodejs
+  ansible.builtin.command: 'dnf module enable -y nodejs'
+
+- name: Install latest version of nodejs
+  ansible.builtin.dnf:
+    name: nodejs

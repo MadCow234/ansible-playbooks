@@ -5,3 +5,7 @@
 - name: Setup PostgreSQL database
   ansible.builtin.include_role:
     name: postgresql
+
+- name: Setup nodejs and npm
+  ansible.builtin.include_role:
+    name: nodejs

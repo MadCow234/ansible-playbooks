@@ -1,0 +1,41 @@
+# Installs and configures a PostgreSQL database.
+
+---
+
+- name: Install and run PostgreSQL database
+  ansible.builtin.include_tasks: install-and-run.yml
+
+- block:
+    - name: Create databases
+      community.postgresql.postgresql_db:
+        state: present
+        name: '{{ database_name }}'
+      loop: '{{ database_names }}'
+      loop_control:
+        loop_var: database_name
+
+    - name: Create database users
+      community.postgresql.postgresql_user:
+        state: present
+        name: '{{ database_user.name }}'
+        password: '{{ database_user.pass }}'
+      loop: '{{ database_users }}'
+      loop_control:
+        loop_var: database_user
+
+    - name: Open listen addresses if any remote sources are configured
+      ansible.builtin.replace:
+        path: ~/data/postgresql.conf
+        regexp: '^#listen_addresses = ''localhost'''
+        replace: 'listen_addresses = ''*''         '
+      run_once: true
+      when: database_client_access | json_query("[*].remote_sources") | flatten | unique | length > 0
+
+    - name: Setup local and remote access to the databases
+      ansible.builtin.include_tasks: setup-database-access.yml
+      loop: '{{ database_client_access }}'
+      loop_control:
+        loop_var: database_access
+  become: true
+  become_user: postgres
+  notify: restart postgres

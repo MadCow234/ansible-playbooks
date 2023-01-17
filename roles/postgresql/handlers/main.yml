@@ -1,0 +1,8 @@
+# Handlers for managing PostgreSQL
+
+---
+
+- name: restart postgres
+  ansible.builtin.service:
+    name: postgresql
+    state: restarted

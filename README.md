@@ -1,2 +1,2 @@
 # ansible-playbooks
-Ansible playbooks for deploying servers.
+MadCow234's automation playbooks.

@@ -1,0 +1,12 @@
+# Deploys a server to host Discord bots and a database.
+
+---
+
+- name: Deploy Discord bot server
+  hosts: discord_bot_servers
+  user: root
+
+  tasks:
+    - name: Deploy Discord bot server
+      ansible.builtin.include_role:
+        name: discord_bot_server

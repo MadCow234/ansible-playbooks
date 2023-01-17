@@ -1,0 +1,9 @@
+# Downloads and installs collections and roles hosted in Ansible Galaxy
+
+# Initialize all collections and roles using: ansible-galaxy install -r requirements.yml
+# Default storage location: ~/.ansible
+
+---
+
+collections:
+  - community.postgresql

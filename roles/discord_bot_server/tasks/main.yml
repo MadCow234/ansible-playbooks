@@ -1,0 +1,7 @@
+# Sets up a server to host Discord bots and a database.
+
+---
+
+- name: Setup PostgreSQL database
+  ansible.builtin.include_role:
+    name: postgresql

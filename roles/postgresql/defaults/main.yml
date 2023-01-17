@@ -1,0 +1,12 @@
+---
+
+database_names:
+  - postgres
+
+database_users:
+  - name: postgres
+    pass: postgres
+
+database_client_access:
+  - user: postgres
+    databases: all

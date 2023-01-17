@@ -1,0 +1,28 @@
+# Configures local and remote access to the PostgreSQL databases.
+
+---
+
+# TODO allow for fine-grain privilege configuration
+- name: Configure database privileges for user {{ database_access.user }}
+  community.postgresql.postgresql_privs:
+    type: database
+    database: '{{ database_name }}'
+    roles: '{{ database_access.user }}'
+    grant_option: false
+    privs: all
+  loop: '{{ database_list }}'
+  loop_control:
+    loop_var: database_name
+  vars:
+    access_list: '{{ database_access.databases | split(",") }}'
+    database_list: '{{ database_names if (access_list | length == 1 and access_list[0] == "all") else access_list }}'
+
+- name: Configure remote access for user {{ database_access.user }}
+  community.postgresql.postgresql_pg_hba:
+    dest: ~/data/pg_hba.conf
+    source: '{{ "samehost" if database_access.remote_sources is not defined else (database_access.remote_sources | join(",")) }}'
+    contype: host
+    databases: '{{ database_access.databases }}'
+    method: md5
+    users: '{{ database_access.user }}'
+    create: true

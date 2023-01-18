@@ -1,0 +1,6 @@
+---
+
+- name: Install latest version of pm2
+  community.general.npm:
+    name: pm2
+    global: true

@@ -9,3 +9,8 @@
 - name: Setup nodejs and npm
   ansible.builtin.include_role:
     name: nodejs
+
+- name: Setup pm2
+  ansible.builtin.include_role:
+    name: pm2
+    

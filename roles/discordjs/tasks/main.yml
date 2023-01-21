@@ -1,0 +1,6 @@
+---
+
+- name: Install Discord.js
+  community.general.npm:
+    name: discord.js
+    global: true

@@ -13,4 +13,7 @@
 - name: Setup pm2
   ansible.builtin.include_role:
     name: pm2
-    
+
+- name: Setup Discord.js
+  ansible.builtin.include_role:
+    name: discordjs

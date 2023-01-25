@@ -1,0 +1,5 @@
+---
+
+discord_bots: []
+
+discord_bot_base_dir: /var/lib/bots/discord

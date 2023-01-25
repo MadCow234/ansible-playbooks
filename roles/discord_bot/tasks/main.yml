@@ -1,0 +1,38 @@
+# Retrieves Discord bot source code
+
+---
+- name: Create directory for Discord bot {{ bot.name }}
+  ansible.builtin.file:
+    path: '{{ discord_bot_base_dir }}/{{ bot.name }}'
+    state: directory
+
+- name: Get the latest source code for Discord bot {{ bot.name }}
+  ansible.builtin.git:
+    repo: '{{ bot.repo }}'
+    dest: '{{ discord_bot_base_dir }}/{{ bot.name }}'
+
+- name: Copy environment variable files to remote host
+  ansible.builtin.template:
+    src: '{{ env_template.src }}'
+    dest: '{{ env_template.dest }}'
+  loop:
+    - { src: 'env.j2', dest: '{{ discord_bot_base_dir }}/{{ bot.name }}/.env' }
+    - { src: 'ecosystem.config.j2', dest: '{{ discord_bot_base_dir }}/{{ bot.name }}/ecosystem.config.js' }
+  loop_control:
+    loop_var: env_template
+
+- name: Install packages based on package.json
+  community.general.npm:
+    path: '{{ discord_bot_base_dir }}/{{ bot.name }}'
+
+- name: Check if the bot is already running
+  ansible.builtin.command: 'pm2 info {{ bot.name }}'
+  changed_when: false
+  failed_when: false
+  register: bot_running
+
+- name: Launch the bot
+  ansible.builtin.command:
+    cmd: 'pm2 start ecosystem.config.js'
+    chdir: '{{ discord_bot_base_dir }}/{{ bot.name }}'
+  when: bot_running.rc == 1

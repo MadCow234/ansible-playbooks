@@ -14,6 +14,14 @@
   ansible.builtin.include_role:
     name: pm2
 
-- name: Setup Discord.js
+- name: Create Discord bot base directory
+  ansible.builtin.file:
+    path: '{{ discord_bot_base_dir }}'
+    state: directory
+
+- name: Setup Discord bots
   ansible.builtin.include_role:
-    name: discordjs
+    name: discord_bot
+  loop: '{{ discord_bots }}'
+  loop_control:
+    loop_var: bot

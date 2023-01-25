@@ -1,0 +1,10 @@
+module.exports = {
+  apps : [
+      {
+        name: "{{ bot.name }}",
+        script: "./{{ bot.nodejs_entrypoint }}",
+        watch: true,
+        node_args: ['-r', 'dotenv/config']
+      }
+  ]
+}

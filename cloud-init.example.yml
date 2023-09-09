@@ -1,0 +1,47 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - epel-release
+packages:
+  - git
+  - python3.11-jmespath
+users:
+  - name: ansible
+    gecos: Ansible User
+    shell: /bin/bash
+    groups: users,admin,wheel
+    sudo: ALL=(ALL) NOPASSWD:ALL
+write_files:
+  - path: /root/.ansible.cfg
+    content: |
+      [defaults]
+      inventory=/root/inventory.yml
+      log_path=/root/ansible.log
+  - path: /root/inventory.yml
+    content: |
+      ---
+      discord_bot_servers:
+        hosts:
+          127.0.0.1:
+            connection: local
+        vars:
+          discord_bots:
+            - name: discord-bot
+              repo: "<REPO_URL>"
+              nodejs_entrypoint: index.js
+              discord_client_id: <CLIENT_ID>
+              discord_bot_token: <BOT_TOKEN>
+ansible:
+  install_method: distro
+  package_name: ansible-core
+  run_user: ansible
+  galaxy:
+    actions:
+      - ["ansible-galaxy", "collection", "install", "community.general"]
+      - ["ansible-galaxy", "collection", "install", "community.postgresql"]
+      - ["ansible-galaxy", "collection", "install", "ansible.posix"]
+  pull:
+    url: "https://github.com/MadCow234/ansible-playbooks.git"
+    playbook_name: deploy-discord-server.yml
